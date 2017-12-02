@@ -7,7 +7,7 @@ I'm participating in [Advent of Code 2017](http://adventofcode.com/) this year, 
 |Day|Solution|Tests|
 |-|-|-|
 |1|[InverseCaptcha.swift](Sources/AOC/DayOne_InverseCaptcha.swift)|[InverseCaptchaSpec.swift](Tests/AOCTests/DayOne_InverseCaptchaSpec.swift)|
-|2|||
+|2|[Checksum.swift](Sources/AOC/DayTwo_Checksum.swift)|[ChecksumSpec.swift](Tests/AOCTests/DayTwo_ChecksumSpec.swift)|
 |3|||
 |4|||
 |5|||
