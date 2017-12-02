@@ -4,5 +4,5 @@ import Quick
 @testable import AOCTests
 
 QCKMain([
-          InverseCaptchaSpec.self,
+          DayOne_InverseCaptchaSpec.self,
         ])

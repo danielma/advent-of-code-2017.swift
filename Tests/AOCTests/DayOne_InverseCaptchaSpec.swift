@@ -2,7 +2,7 @@ import Quick
 import Nimble
 @testable import AOC
 
-class InverseCaptchaSpec: QuickSpec {
+class DayOne_InverseCaptchaSpec: QuickSpec {
   override func spec() {
     describe("part 1") {
       it("1122") {
