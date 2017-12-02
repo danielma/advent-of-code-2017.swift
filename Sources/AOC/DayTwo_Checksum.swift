@@ -7,10 +7,11 @@ public struct Spreadsheet {
   private static let tab = Character("\t")
 
   public static func parse(_ source: String) -> Spreadsheet {
+    let space = Character(" ")
+    let tab = Character("\t")
     let rows = source.split(separator: "\n")
       .map { (row) -> [Int] in
-        row
-          .split { $0 == space || $0 == tab }
+        row.split(whereSeparator: { $0 == space || $0 == tab })
           .map { Int(String($0))! }
       }
 
