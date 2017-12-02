@@ -4,5 +4,5 @@ import Quick
 @testable import AOCTests
 
 QCKMain([
-          MySpec.self,
+          InverseCaptchaSpec.self,
         ])
