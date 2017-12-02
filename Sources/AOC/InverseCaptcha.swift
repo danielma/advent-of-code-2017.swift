@@ -12,22 +12,35 @@ import Foundation
  */
 
 public func inverseCaptchaPart1(_ input: String) -> Int {
-  let numbers = Array(input).map { $0.toInt() }
+  let numbers = input.map { Int(String($0))! }
 
   return numbers.enumerated().reduce(0, { (memo, element) in
     let (index, number) = element
     let nextNumber = numbers[(index + 1) % numbers.count]
 
-    if number == nextNumber {
-      return memo + number
-    } else {
-      return memo
-    }
+    return number == nextNumber ? (memo + number) : (memo)
   })
 }
 
-extension Character {
-  func toInt() -> Int {
-    return Int(String(self))!
-  }
+/*
+ Now, instead of considering the next digit, it wants you to consider the digit halfway around the circular list. That is, if your list contains 10 items, only include a digit in your sum if the digit 10/2 = 5 steps forward matches it. Fortunately, your list has an even number of elements.
+
+ For example:
+
+ 1212 produces 6: the list contains 4 items, and all four digits match the digit 2 items ahead.
+ 1221 produces 0, because every comparison is between a 1 and a 2.
+ 123425 produces 4, because both 2s match each other, but no other digit has a match.
+ 123123 produces 12.
+ 12131415 produces 4.
+*/
+
+public func inverseCaptchaPart2(_ input: String) -> Int {
+  let numbers = input.map { Int(String($0))! }
+
+  return numbers.enumerated().reduce(0, { (memo, element) in
+    let (index, number) = element
+    let nextNumber = numbers[(index + (numbers.count / 2)) % numbers.count]
+
+    return number == nextNumber ? (memo + number) : (memo)
+  })
 }
