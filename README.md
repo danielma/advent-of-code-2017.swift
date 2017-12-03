@@ -8,7 +8,7 @@ I'm participating in [Advent of Code 2017](http://adventofcode.com/) this year, 
 |-|-|-|
 |1|[InverseCaptcha.swift](Sources/AOC/DayOne_InverseCaptcha.swift)|[InverseCaptchaSpec.swift](Tests/AOCTests/DayOne_InverseCaptchaSpec.swift)|
 |2|[Checksum.swift](Sources/AOC/DayTwo_Checksum.swift)|[ChecksumSpec.swift](Tests/AOCTests/DayTwo_ChecksumSpec.swift)|
-|3|||
+|3|[SpiralMemory.swift](Sources/AOC/DayThree_SpiralMemory.swift)|[SpiralMemorySpec.swift](Tests/AOCTests/DayThree_SpiralMemorySpec.swift)|
 |4|||
 |5|||
 |6|||

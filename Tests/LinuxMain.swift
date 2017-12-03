@@ -5,4 +5,6 @@ import Quick
 
 QCKMain([
           DayOne_InverseCaptchaSpec.self,
+          DayTwo_ChecksumSpec.self,
+          DayThree_SpiralMemorySpec.self,
         ])
