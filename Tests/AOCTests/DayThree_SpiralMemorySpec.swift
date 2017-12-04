@@ -4,7 +4,7 @@ import Nimble
 
 class DayThree_SpiralMemorySpec: QuickSpec {
   override func spec() {
-    fdescribe("part 1") {
+    describe("part 1") {
       it("1") {
         expect(SpiralMemory.moves(from: 1, to: 1)).to(equal(0))
       }
@@ -19,6 +19,29 @@ class DayThree_SpiralMemorySpec: QuickSpec {
 
       it("1024") {
         expect(SpiralMemory.moves(from: 1024, to: 1)).to(equal(31))
+      }
+    }
+
+    describe("part 2") {
+      it("1") {
+        expect(SpiralMemory.valueAt(0)) == 1
+      }
+
+      it("2") {
+        expect(SpiralMemory.valueAt(1)) == 1
+      }
+
+      it("4") {
+        expect(SpiralMemory.valueAt(3)) == 4
+      }
+
+      it("5") {
+        expect(SpiralMemory.valueAt(4)) == 5
+      }
+
+      it("first value larger than") {
+        expect(SpiralMemory.firstValueLargerThan(5)) == 10
+        expect(SpiralMemory.firstValueLargerThan(747)) == 806
       }
     }
   }
