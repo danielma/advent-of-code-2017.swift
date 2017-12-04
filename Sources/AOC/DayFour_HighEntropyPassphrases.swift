@@ -3,8 +3,6 @@ import Foundation
 public struct HighEntropyPassphrases {
   public typealias Passphrase = String
 
-  static let Space = Character(" ")
-
   /*
    A new system policy has been put in place that requires all accounts to use a passphrase instead of simply a password. A passphrase consists of a series of words (lowercase letters) separated by spaces.
 
@@ -20,17 +18,7 @@ public struct HighEntropyPassphrases {
    */
 
   public static func isValidPartOne(_ passphrase: Passphrase) -> Bool {
-    let words = passphrase.split(separator: Space)
-
-    return words.reduceEachPair(true, transform: { valid, pair in
-      let (wordA, wordB) = pair
-
-      if wordA == wordB {
-        return false
-      } else {
-        return valid
-      }
-    })
+    return processPassphrase(passphrase) { $0 == $1 }
   }
 
   /*
@@ -47,17 +35,28 @@ public struct HighEntropyPassphrases {
   Under this new system policy, how many passphrases are valid?
   */
 
-  public static func isValidPartTwo(_ passpharse: Passphrase) -> Bool {
-    let words = passpharse.split(separator: Space)
+  public static func isValidPartTwo(_ passphrase: Passphrase) -> Bool {
+    return processPassphrase(passphrase) { $0.sorted() == $1.sorted() }
+  }
 
-    return words.reduceEachPair(true, transform: { valid, pair in
+  private static let Space = Character(" ")
+
+  private static func passphraseWords(_ passphrase: Passphrase) -> [String] {
+    return passphrase.split(separator: Space).map { String($0) }
+  }
+
+  private static func processPassphrase(_ passphrase: Passphrase, isMatch: @escaping (Passphrase, Passphrase) -> Bool) -> Bool {
+    var valid = true
+
+    for pair in passphraseWords(passphrase).pairs() {
       let (wordA, wordB) = pair
 
-      if wordA.sorted() == wordB.sorted() {
-        return false
-      } else {
-        return valid
+      if isMatch(wordA, wordB) {
+        valid = false
+        break
       }
-    })
+    }
+
+    return valid
   }
 }

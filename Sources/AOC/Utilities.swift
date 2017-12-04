@@ -9,13 +9,8 @@ import Foundation
 
 extension Array {
   func forEachPair(_ body: @escaping ((Element, Element)) -> Void) {
-    enumerated().forEach { (arg) in
-      let (index, element) = arg
-      let nextIndex = index + 1
-
-      self[nextIndex...].forEach { (comparingElement) in
-        body((element, comparingElement))
-      }
+    for (element, sibling) in pairs() {
+      body((element, sibling))
     }
   }
 
@@ -27,5 +22,36 @@ extension Array {
     }
 
     return result
+  }
+
+  func pairs() -> ArrayPairsIterator<Element> {
+    return ArrayPairsIterator(self)
+  }
+}
+
+class ArrayPairsIterator<T>: Sequence, IteratorProtocol {
+  var array: Array<T>
+  var iterationIndex = 1
+
+  init(_ array: Array<T>) {
+    self.array = array
+  }
+
+  func next() -> (T, T)? {
+    let indexToCompareToCount = iterationIndex + 1
+    if array.count <= 1 {
+      return nil
+    } else {
+      let pair = (array[0], array[iterationIndex])
+
+      if array.count == indexToCompareToCount {
+        iterationIndex = 1
+        array.remove(at: 0)
+      } else {
+        iterationIndex += 1
+      }
+
+      return pair
+    }
   }
 }
