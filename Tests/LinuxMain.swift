@@ -7,4 +7,5 @@ QCKMain([
           DayOne_InverseCaptchaSpec.self,
           DayTwo_ChecksumSpec.self,
           DayThree_SpiralMemorySpec.self,
+          DayFour_HighEntropyPassphrases.self,
         ])
