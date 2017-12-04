@@ -46,17 +46,12 @@ public struct HighEntropyPassphrases {
   }
 
   private static func processPassphrase(_ passphrase: Passphrase, isMatch: @escaping (Passphrase, Passphrase) -> Bool) -> Bool {
-    var valid = true
-
-    for pair in passphraseWords(passphrase).pairs() {
-      let (wordA, wordB) = pair
-
-      if isMatch(wordA, wordB) {
-        valid = false
-        break
+    for (word, sibling) in passphraseWords(passphrase).pairs() {
+      if isMatch(word, sibling) {
+        return false
       }
     }
 
-    return valid
+    return true
   }
 }
