@@ -1,23 +1,93 @@
 import Foundation
 
-struct Coordinate {
+enum Direction {
+  case up
+  case down
+  case left
+  case right
+}
+
+struct Coordinate: Equatable, Hashable {
   let x: Int
   let y: Int
 
   func manhattanDistance(_ other: Coordinate) -> Int {
     return abs(self.x - other.x) + abs(self.y - other.y)
   }
-}
 
-extension Coordinate: Equatable {}
+  func increment(_ direction: Direction) -> Coordinate {
+    switch direction {
+    case .up:
+      return Coordinate(x: x, y: y + 1)
+    case .down:
+      return Coordinate(x: x, y: y - 1)
+    case .left:
+      return Coordinate(x: x - 1, y: y)
+    case .right:
+      return Coordinate(x: x + 1, y: y)
+    }
+  }
 
-func ==(lhs: Coordinate, rhs: Coordinate) -> Bool {
-  return lhs.x == rhs.x && lhs.y == rhs.y
-}
-
-extension Coordinate: Hashable {
   var hashValue: Int {
     return "\(x)\(y)".hashValue
+  }
+
+  public static func ==(lhs: Coordinate, rhs: Coordinate) -> Bool {
+    return lhs.x == rhs.x && lhs.y == rhs.y
+  }
+}
+
+class Grid {
+  typealias NumberToCoordinate = [Int: Coordinate]
+  typealias CoordinateToNumber = [Coordinate: Int]
+
+  var numbersToCoordinate = NumberToCoordinate()
+  var coordinatesToNumber = CoordinateToNumber()
+
+  init(number: Int, coordinate: Coordinate) {
+    set(number: number, coordinate: coordinate)
+  }
+
+  func set(number: Int, coordinate: Coordinate) {
+    coordinatesToNumber[coordinate] = number
+    numbersToCoordinate[number] = coordinate
+  }
+
+  func get(_ number: Int) -> Coordinate? {
+    return numbersToCoordinate[number]
+  }
+
+  func get(_ coordinate: Coordinate) -> Int? {
+    return coordinatesToNumber[coordinate]
+  }
+
+  func allNearby(_ coordinate: Coordinate) -> [Int] {
+    let above = coordinate.increment(.up)
+    let below = coordinate.increment(.down)
+
+    let coordinates = [
+      above.increment(.left),
+      above,
+      above.increment(.right),
+
+      coordinate.increment(.left),
+      coordinate,
+      coordinate.increment(.right),
+
+      below.increment(.left),
+      below,
+      below.increment(.right),
+    ]
+
+    return coordinates.reduce(into: [Int](), { (numbers, coordinate) in
+      if let number = self.get(coordinate) {
+        numbers.append(number)
+      }
+    })
+  }
+
+  public static func initial() -> Grid {
+    return Grid(number: 1, coordinate: Coordinate(x: 0, y: 0))
   }
 }
 
@@ -67,98 +137,37 @@ public struct SpiralMemory {
     }
   }
 
-  public static func drawBasicIncrementingGrid(to: Int) -> Grid {
-    return walkGrid(done: { $0 == to }) { $0 + 1 }
-  }
-
   public static func valueAt(_ index: Int) -> Int {
     var output = 1
 
-//    drawGrid(to: index, incrementGrid: { index, coordinate, grid in
-//      let nearbyNumbers = allNearby(coordinate, grid: grid)
-//
-//      output = nearbyNumbers.reduce(0, +)
-//      return output
-//    })
+    walkGrid(done: { idx, _coordinate, grid in
+      index <= idx
+    }, getNextNumber: { index, coordinate, grid in
+      let nearbyNumbers = grid.allNearby(coordinate)
 
-    return output
-  }
-
-  public static func firstValueLargerThan(_ number: Int) -> Int {
-    var output = 0
-//    drawGrid(toNumber: number + 1, incrementGrid: { index, coordinate, grid in
-//      let nearbyNumbers = allNearby(coordinate, grid: grid)
-//
-//      output = nearbyNumbers.reduce(0, +)
-//      return output
-//    })
-
-    return output
-  }
-
-  private static func allNearby(_ coordinate: Coordinate, grid: Grid) -> [Int] {
-    let above = incrementCoordinate(coordinate, direction: .up)
-    let below = incrementCoordinate(coordinate, direction: .down)
-
-    let coordinates = [
-      incrementCoordinate(above, direction: .left),
-      above,
-      incrementCoordinate(above, direction: .right),
-
-      incrementCoordinate(coordinate, direction: .left),
-      coordinate,
-      incrementCoordinate(coordinate, direction: .right),
-
-      incrementCoordinate(below, direction: .left),
-      below,
-      incrementCoordinate(below, direction: .right),
-    ]
-
-    return coordinates.reduce(into: [Int](), { (numbers, coordinate) in
-      if let number = grid.get(coordinate) {
-        numbers.append(number)
-      }
+      output = nearbyNumbers.reduce(0, +)
+      return output
     })
+
+    return output
   }
 
+  public static func firstValueLargerThan(_ numberLargerThan: Int) -> Int {
+    var number = 0
 
-  public class Grid {
-    typealias NumberToCoordinate = [Int: Coordinate]
-    typealias CoordinateToNumber = [Coordinate: Int]
+    walkGrid(done: { idx, _coordinate, grid in
+      number > numberLargerThan
+    }, getNextNumber: { index, coordinate, grid in
+      let nearbyNumbers = grid.allNearby(coordinate)
 
-    var numbersToCoordinate = NumberToCoordinate()
-    var coordinatesToNumber = CoordinateToNumber()
+      number = nearbyNumbers.reduce(0, +)
+      return number
+    })
 
-    init(number: Int, coordinate: Coordinate) {
-      set(number: number, coordinate: coordinate)
-    }
-
-    func set(number: Int, coordinate: Coordinate) {
-      coordinatesToNumber[coordinate] = number
-      numbersToCoordinate[number] = coordinate
-    }
-
-    func get(_ number: Int) -> Coordinate? {
-      return numbersToCoordinate[number]
-    }
-
-    func get(_ coordinate: Coordinate) -> Int? {
-      return coordinatesToNumber[coordinate]
-    }
-
-    public static func initial() -> Grid {
-      return Grid(number: 1, coordinate: Coordinate(x: 0, y: 0))
-    }
+    return number
   }
 
-  enum GridDirection {
-    case up
-    case down
-    case left
-    case right
-  }
-
-  private static let nextGridDirections: [GridDirection: GridDirection] = [
+  private static let nextGridDirections: [Direction: Direction] = [
     .right: .up,
     .up: .left,
     .left: .down,
@@ -173,18 +182,18 @@ public struct SpiralMemory {
     })
   }
 
-  private static func walkGrid(done: (Int, Coordinate, Grid) -> Bool, getNextNumber: (Int, Coordinate, Grid) -> Int) -> Grid {
+  @discardableResult private static func walkGrid(done: (Int, Coordinate, Grid) -> Bool, getNextNumber: (Int, Coordinate, Grid) -> Int) -> Grid {
     let grid = Grid.initial()
 
-    var direction = GridDirection.down
+    var direction = Direction.down
     var lastCoordinate = grid.get(1)!
     var number = 1
     var index = 1
 
     while !done(index, lastCoordinate, grid) {
       let nextDirection = nextGridDirections[direction]!
-      let nextCoordinateInSameDirection = incrementCoordinate(lastCoordinate, direction: direction)
-      let nextCoordinateInNextDirection = incrementCoordinate(lastCoordinate, direction: nextDirection)
+      let nextCoordinateInSameDirection = lastCoordinate.increment(direction)
+      let nextCoordinateInNextDirection = lastCoordinate.increment(nextDirection)
       let anyInNextDirection = grid.get(nextCoordinateInNextDirection) != nil
 
       direction = anyInNextDirection ? direction : nextDirection
@@ -197,75 +206,6 @@ public struct SpiralMemory {
     }
 
     return grid
-  }
-
-  private static func xdrawGrid(toNumber: Int, incrementGrid: (Int, Coordinate, Grid) -> Int) -> Grid {
-    let grid = Grid.initial()
-
-    if (toNumber <= 1) {
-      return grid
-    }
-
-    var direction = GridDirection.down
-    var lastCoordinate = grid.get(1)!
-    var number = 1
-    var index = 0
-
-    while number < toNumber {
-      let nextDirection = nextGridDirections[direction]!
-      let nextCoordinateInSameDirection = incrementCoordinate(lastCoordinate, direction: direction)
-      let nextCoordinateInNextDirection = incrementCoordinate(lastCoordinate, direction: nextDirection)
-      let anyInNextDirection = grid.get(nextCoordinateInNextDirection) != nil
-
-      direction = anyInNextDirection ? direction : nextDirection
-      let nextCoordinate = anyInNextDirection ? nextCoordinateInSameDirection : nextCoordinateInNextDirection
-
-      number = incrementGrid(index, nextCoordinate, grid)
-      grid.set(number: number, coordinate: nextCoordinate)
-      lastCoordinate = nextCoordinate
-      index += 1
-    }
-
-    return grid
-  }
-
-  private static func xdrawGrid(to: Int, incrementGrid: (Int, Coordinate, Grid) -> Int) -> Grid {
-    let initialGrid = Grid.initial()
-
-    if (to <= 1) {
-      return initialGrid
-    }
-
-    let range = (1...to)
-    var direction = GridDirection.down
-    var lastCoordinate = initialGrid.get(1)!
-
-    return range.reduce(into: initialGrid) { grid, index in
-      let nextDirection = nextGridDirections[direction]!
-      let nextCoordinateInSameDirection = incrementCoordinate(lastCoordinate, direction: direction)
-      let nextCoordinateInNextDirection = incrementCoordinate(lastCoordinate, direction: nextDirection)
-      let anyInNextDirection = grid.get(nextCoordinateInNextDirection) != nil
-
-      direction = anyInNextDirection ? direction : nextDirection
-      let nextCoordinate = anyInNextDirection ? nextCoordinateInSameDirection : nextCoordinateInNextDirection
-
-      let number = incrementGrid(index, nextCoordinate, grid)
-      grid.set(number: number, coordinate: nextCoordinate)
-      lastCoordinate = nextCoordinate
-    }
-  }
-
-  private static func incrementCoordinate(_ coordinate: Coordinate, direction: GridDirection) -> Coordinate {
-    switch direction {
-    case .up:
-      return Coordinate(x: coordinate.x, y: coordinate.y + 1)
-    case .down:
-      return Coordinate(x: coordinate.x, y: coordinate.y - 1)
-    case .left:
-      return Coordinate(x: coordinate.x - 1, y: coordinate.y)
-    case .right:
-      return Coordinate(x: coordinate.x + 1, y: coordinate.y)
-    }
   }
 }
 

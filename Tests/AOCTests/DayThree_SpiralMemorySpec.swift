@@ -36,11 +36,11 @@ class DayThree_SpiralMemorySpec: QuickSpec {
       }
 
       it("4") {
-        expect(SpiralMemory.valueAt(3)) == 4
+        expect(SpiralMemory.valueAt(4)) == 4
       }
 
       it("5") {
-        expect(SpiralMemory.valueAt(4)) == 5
+        expect(SpiralMemory.valueAt(5)) == 5
       }
 
       it("first value larger than") {
