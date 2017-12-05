@@ -8,4 +8,5 @@ QCKMain([
           DayTwo_ChecksumSpec.self,
           DayThree_SpiralMemorySpec.self,
           DayFour_HighEntropyPassphrases.self,
+          DayFive_AMazeOfTwistyTrampolinesSpec.self,
         ])
