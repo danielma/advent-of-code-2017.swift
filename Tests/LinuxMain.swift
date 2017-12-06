@@ -9,4 +9,5 @@ QCKMain([
           DayThree_SpiralMemorySpec.self,
           DayFour_HighEntropyPassphrases.self,
           DayFive_AMazeOfTwistyTrampolinesSpec.self,
+          DaySix_MemoryReallocationSpec.self,
         ])
