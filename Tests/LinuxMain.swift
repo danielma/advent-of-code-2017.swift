@@ -10,4 +10,5 @@ QCKMain([
           DayFour_HighEntropyPassphrases.self,
           DayFive_AMazeOfTwistyTrampolinesSpec.self,
           DaySix_MemoryReallocationSpec.self,
+          DaySeven_RecursiveCircusSpec.self,
         ])

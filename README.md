@@ -12,7 +12,7 @@ I'm participating in [Advent of Code 2017](http://adventofcode.com/) this year, 
 |4|[HighEntropyPassphrases.swift](Sources/AOC/DayFour_HighEntropyPassphrases.swift)|[HighEntropyPassphrasesSpec.swift](Tests/AOCTests/DayFour_HighEntropyPassphrasesSpec.swift)|
 |5|[AMazeOfTwistyTrampolines.swift](Sources/AOC/DayFive_AMazeOfTwistyTrampolines.swift)|[AMazeOfTwistyTrampolinesSpec.swift](Tests/AOCTests/DayFive_AMazeOfTwistyTrampolinesSpec.swift)|
 |6|[MemoryReallocation.swift](Sources/AOC/DaySix_MemoryReallocation.swift)|[MemoryReallocationSpec.swift](Tests/AOCTests/DaySix_MemoryReallocationSpec.swift)|
-|7|||
+|7|[RecursiveCircus.swift](Sources/AOC/DaySeven_RecursiveCircus.swift)|[RecursiveCircusSpec.swift](Tests/AOCTests/DaySeven_RecursiveCircusSpec.swift)|
 |8|||
 |9|||
 |10|||
